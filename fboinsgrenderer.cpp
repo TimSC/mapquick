@@ -40,22 +40,23 @@
 
 #include "fboinsgrenderer.h"
 #include "logorenderer.h"
+#include "polygonrenderer.h"
 
 #include <QtGui/QOpenGLFramebufferObject>
 
 #include <QtQuick/QQuickWindow>
 #include <qsgsimpletexturenode.h>
 
-class LogoInFboRenderer : public QQuickFramebufferObject::Renderer
+class FboRenderer : public QQuickFramebufferObject::Renderer
 {
 public:
-    LogoInFboRenderer()
+	FboRenderer()
     {
-        logo.initialize();
+		renderer.initialize();
     }
 
     void render() {
-        logo.render();
+		renderer.render();
         update();
     }
 
@@ -66,10 +67,10 @@ public:
         return new QOpenGLFramebufferObject(size, format);
     }
 
-    LogoRenderer logo;
+	PolygonRenderer renderer;
 };
 
 QQuickFramebufferObject::Renderer *FboInSGRenderer::createRenderer() const
 {
-    return new LogoInFboRenderer();
+	return new FboRenderer();
 }

@@ -39,6 +39,7 @@
 ****************************************************************************/
 
 #include "logorenderer.h"
+#include "polygonrenderer.h"
 #include <QPainter>
 #include <QPaintEngine>
 #include <math.h>

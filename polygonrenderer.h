@@ -16,7 +16,7 @@ public:
 
 protected:
 	QOpenGLShaderProgram program1;
-	QVector<QVector3D> vertices;
+	QVector<QVector2D> vertices;
 	int vertexAttr1;
 };
 

@@ -71,7 +71,7 @@ void LogoRenderer::initialize()
 
     QOpenGLShader *vshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &program1);
     const char *vsrc1 =
-        "attribute highp vec4 vertex;\n"
+		"attribute highp vec4 vertex;\n"
         "attribute mediump vec3 normal;\n"
         "uniform mediump mat4 matrix;\n"
         "varying mediump vec4 color;\n"

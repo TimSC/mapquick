@@ -67,6 +67,7 @@ public:
         return new QOpenGLFramebufferObject(size, format);
     }
 
+	//LogoRenderer renderer;
 	PolygonRenderer renderer;
 };
 

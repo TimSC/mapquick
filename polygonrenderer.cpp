@@ -1,10 +1,11 @@
 #include "polygonrenderer.h"
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 // Vertex shader
 const char vs[] = \
-"#version 120\n"\
+"#version 100\n"\
 "// Attribute variable that contains coordinates of the vertices.\n" \
 "\n" \
 "attribute highp vec4 vertex;\n"
@@ -14,12 +15,12 @@ const char vs[] = \
 "    // The final position is transformed from a null signal to a sinewave here.\n" \
 "    // We pass the position to gl_Position, by converting it into\n" \
 "    // a 4D vector. The last coordinate should be 0 when rendering 2D figures.\n" \
-"    gl_Position = vec4(vertex.x, .2 * sin(20 * vertex.x), 0., 1.);\n" \
+"    gl_Position = vec4(vertex.x, vertex.y, 0., 1.);\n" \
 "}\n";
 
 // Fragment shader
 const char fs[] = \
-"#version 120\n"\
+"#version 100\n"\
 "// Main fragment shader function.\n" \
 "void main()\n" \
 "{\n" \
@@ -63,7 +64,7 @@ void PolygonRenderer::render()
 	vertices.clear();
 	for(unsigned i=0;i<10000;i++) {
 		float x = ((float)i / 10000.0f) * 2.0f - 1.0;
-		vertices << QVector2D(x, 0.0f);
+		vertices << QVector2D(x, .2 * sin(20.0f * x));
 	}
 
 	glDepthMask(false);

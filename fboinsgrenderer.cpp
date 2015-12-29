@@ -69,8 +69,8 @@ public:
     }
 
 	//LogoRenderer renderer;
-	PolygonRenderer renderer;
-	//LineRenderer renderer;
+	//PolygonRenderer renderer;
+	LineRenderer renderer;
 };
 
 QQuickFramebufferObject::Renderer *FboInSGRenderer::createRenderer() const

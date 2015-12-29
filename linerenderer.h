@@ -17,7 +17,11 @@ public:
 protected:
 	QOpenGLShaderProgram program1;
 	QVector<QVector2D> vertices;
+	QVector<QVector2D> unitNormal;
+	QVector<GLfloat> lineWidth;
 	int vertexAttr1;
+	int unitNormalAttr;
+	int lineWidthAttr;
 };
 
 #endif // LINERENDERER_H

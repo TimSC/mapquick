@@ -74,18 +74,19 @@ void LineRenderer::initialize()
 		float y2 = .2 * sin(20.0f * x2);
 		float dx = x2 - x1;
 		float dy = y2 - y1;
-		float nx = 0.0;
-		float ny = 1.0;
+		float nx = dy;
+		float ny = -dx;
 		float magn = pow(pow(nx, 2.0f)+pow(ny, 2.0f),0.5f);
 		if(magn > 0.0f) {
 			nx /= magn;
 			ny /= magn;
 		}
+
 		vertices << QVector2D(x1, y1);
 		vertices << QVector2D(x1, y1);
 		vertices << QVector2D(x2, y2);
 		unitNormal << QVector2D(nx, ny);
-		unitNormal << QVector2D(nx, -ny);
+		unitNormal << QVector2D(-nx, -ny);
 		unitNormal << QVector2D(nx, ny);
 		lineWidth.append(0.05f);
 		lineWidth.append(0.05f);
@@ -95,8 +96,8 @@ void LineRenderer::initialize()
 		vertices << QVector2D(x2, y2);
 		vertices << QVector2D(x1, y1);
 		unitNormal << QVector2D(nx, ny);
-		unitNormal << QVector2D(nx, -ny);
-		unitNormal << QVector2D(nx, -ny);
+		unitNormal << QVector2D(-nx, -ny);
+		unitNormal << QVector2D(-nx, -ny);
 		lineWidth.append(0.05f);
 		lineWidth.append(0.05f);
 		lineWidth.append(0.05f);

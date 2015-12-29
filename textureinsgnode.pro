@@ -2,10 +2,12 @@ QT += qml quick
 
 HEADERS += fboinsgrenderer.h \
     logorenderer.h \
-    polygonrenderer.h
+    polygonrenderer.h \
+    linerenderer.h
 SOURCES += fboinsgrenderer.cpp main.cpp \
     logorenderer.cpp \
-    polygonrenderer.cpp
+    polygonrenderer.cpp \
+    linerenderer.cpp
 
 INCLUDEPATH += ../shared
 

@@ -41,6 +41,7 @@
 #include "fboinsgrenderer.h"
 #include "logorenderer.h"
 #include "polygonrenderer.h"
+#include "linerenderer.h"
 
 #include <QtGui/QOpenGLFramebufferObject>
 
@@ -69,6 +70,7 @@ public:
 
 	//LogoRenderer renderer;
 	PolygonRenderer renderer;
+	//LineRenderer renderer;
 };
 
 QQuickFramebufferObject::Renderer *FboInSGRenderer::createRenderer() const

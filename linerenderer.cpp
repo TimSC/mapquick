@@ -1,4 +1,4 @@
-#include "polygonrenderer.h"
+#include "linerenderer.h"
 #include <iostream>
 #include <cmath>
 using namespace std;
@@ -29,17 +29,17 @@ const char fs[] = \
 "}\n" \
 "\n";
 
-PolygonRenderer::PolygonRenderer()
+LineRenderer::LineRenderer()
 {
 	vertexAttr1 = 0;
 }
 
-PolygonRenderer::~PolygonRenderer()
+LineRenderer::~LineRenderer()
 {
 
 }
 
-void PolygonRenderer::initialize()
+void LineRenderer::initialize()
 {
 	cout << glGetString(GL_VERSION) << endl;
 
@@ -64,7 +64,7 @@ void PolygonRenderer::initialize()
 
 }
 
-void PolygonRenderer::render()
+void LineRenderer::render()
 {
 	glDepthMask(false);
 

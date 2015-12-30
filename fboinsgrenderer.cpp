@@ -63,7 +63,7 @@ public:
 
     QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) {
         QOpenGLFramebufferObjectFormat format;
-        format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+		format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
         format.setSamples(4);
         return new QOpenGLFramebufferObject(size, format);
     }

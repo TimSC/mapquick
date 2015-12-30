@@ -108,24 +108,4 @@ Item {
         loops: Animation.Infinite
     }
 
-    Rectangle {
-        id: labelFrame
-        anchors.margins: -10
-        radius: 5
-        color: "white"
-        border.color: "black"
-        opacity: 0.8
-        anchors.fill: label
-    }
-
-    Text {
-        id: label
-        anchors.bottom: renderer.bottom
-        anchors.left: renderer.left
-        anchors.right: renderer.right
-        anchors.margins: 20
-        wrapMode: Text.WordWrap
-        text: "The blue rectangle with the vintage 'Q' is an FBO, rendered by the application on the scene graph rendering thread. The FBO is managed and displayed using the QQuickFramebufferObject convenience class."
-    }
-
 }

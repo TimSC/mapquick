@@ -11,21 +11,35 @@ const char vs[] = \
 "attribute highp vec4 vertex;\n"
 "attribute highp vec4 unitNormal;\n"
 "attribute float lineWidth;\n"
-"// Main function, which needs to set `gl_Position`.\n" \
-"void main()\n" \
-"{\n" \
-"    gl_Position = vec4(vertex.x + (unitNormal.x * lineWidth), vertex.y + (unitNormal.y * lineWidth), 0., 1.);\n" \
+"varying vec2 interpNorm;\n"
+"varying vec2 interpLinePos;\n"
+"varying vec2 interpVertex;\n"
+"// Main function, which needs to set `gl_Position`.\n"
+"void main()\n"
+"{\n"
+"    interpVertex = vec2(vertex.x + (unitNormal.x * lineWidth), vertex.y + (unitNormal.y * lineWidth));\n"
+"    gl_Position = vec4(interpVertex.x, interpVertex.y, 0., 1.);\n"
+"    interpNorm = vec2(unitNormal.x, unitNormal.y);\n"
+"    interpLinePos = vec2(vertex.x, vertex.y);\n"
 "}\n";
 
 // Fragment shader
 const char fs[] = \
-"#version 100\n"\
-"// Main fragment shader function.\n" \
-"void main()\n" \
-"{\n" \
-"    // We simply set the pixel color to yellow.\n" \
-"    gl_FragColor = vec4(1., 1., 0., 1.);\n" \
-"}\n" \
+"#version 100\n"
+"// Main fragment shader function.\n"
+"#undef lowp\n" //https://forum.qt.io/topic/48001/qglshaderprogram-glsl-es-2-shaders-not-compiling
+"#undef mediump\n"
+"#undef highp\n"
+"varying mediump vec2 interpNorm;\n"
+"varying mediump vec2 interpLinePos;\n"
+"varying mediump vec2 interpVertex;\n"
+"void main()\n"
+"{\n"
+"	 mediump float awayFromLine = dot(interpNorm, interpVertex-interpLinePos);\n"
+"    mediump float alpha = 1.0 - awayFromLine / 0.05;\n"
+"    if(alpha < 0.0) alpha = 0.0;\n"
+"    gl_FragColor = vec4(1.0, 1.0, 0.0, alpha);\n"
+"}\n"
 "\n";
 
 LineRenderer::LineRenderer()
@@ -107,6 +121,8 @@ void LineRenderer::initialize()
 void LineRenderer::render()
 {
 	glDisable(GL_DEPTH_TEST);
+	glBlendEquation(GL_FUNC_ADD);
+	glEnable(GL_BLEND);
 
 	glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

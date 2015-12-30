@@ -8,8 +8,8 @@ const char vs[] = \
 "#version 100\n"\
 "// Attribute variable that contains coordinates of the vertices.\n" \
 "\n" \
-"attribute highp vec4 vertex;\n"
-"attribute highp vec4 unitNormal;\n"
+"attribute highp vec2 vertex;\n"
+"attribute highp vec2 unitNormal;\n"
 "attribute float lineWidth;\n"
 "varying vec2 interpNorm;\n"
 "varying vec2 interpLinePos;\n"

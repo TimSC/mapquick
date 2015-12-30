@@ -10,10 +10,12 @@ const char vs[] = \
 "\n" \
 "attribute highp vec2 vertex;\n"
 "attribute highp vec2 unitNormal;\n"
+"attribute highp vec3 colour;\n"
 "attribute float lineWidth;\n"
 "varying vec2 interpNorm;\n"
 "varying vec2 interpLinePos;\n"
 "varying vec2 interpVertex;\n"
+"varying vec3 interpColour;\n"
 "// Main function, which needs to set `gl_Position`.\n"
 "void main()\n"
 "{\n"
@@ -21,6 +23,7 @@ const char vs[] = \
 "    gl_Position = vec4(interpVertex.x, interpVertex.y, 0., 1.);\n"
 "    interpNorm = vec2(unitNormal.x, unitNormal.y);\n"
 "    interpLinePos = vec2(vertex.x, vertex.y);\n"
+"    interpColour = colour;\n"
 "}\n";
 
 // Fragment shader
@@ -33,12 +36,13 @@ const char fs[] = \
 "varying mediump vec2 interpNorm;\n"
 "varying mediump vec2 interpLinePos;\n"
 "varying mediump vec2 interpVertex;\n"
+"varying mediump vec3 interpColour;\n"
 "void main()\n"
 "{\n"
 "	 mediump float awayFromLine = dot(interpNorm, interpVertex-interpLinePos);\n"
 "    mediump float alpha = 1.0 - awayFromLine / 0.05;\n"
 "    if(alpha < 0.0) alpha = 0.0;\n"
-"    gl_FragColor = vec4(1.0, 1.0, 0.0, alpha);\n"
+"    gl_FragColor = vec4(interpColour.x, interpColour.y, interpColour.z, alpha);\n"
 "}\n"
 "\n";
 
@@ -47,6 +51,7 @@ LineRenderer::LineRenderer()
 	vertexAttr1 = -1;
 	unitNormalAttr = -1;
 	lineWidthAttr = -1;
+	colourAttr = -1;
 }
 
 LineRenderer::~LineRenderer()
@@ -71,6 +76,7 @@ void LineRenderer::initialize()
 	vertexAttr1 = program1.attributeLocation("vertex");
 	unitNormalAttr = program1.attributeLocation("unitNormal");
 	lineWidthAttr = program1.attributeLocation("lineWidth");
+	colourAttr = program1.attributeLocation("colour");
 	cout << "vertex attribute location: " << vertexAttr1 << endl;
 	cout << "unitNormal attribute location: " << unitNormalAttr << endl;
 	cout << "lineWidth attribute location: " << lineWidthAttr << endl;
@@ -78,6 +84,7 @@ void LineRenderer::initialize()
 	vertices.clear();
 	unitNormal.clear();
 	lineWidth.clear();
+	vertexColours.clear();
 
 	for(unsigned i=0;i<100;i++) {
 		//https://www.mapbox.com/blog/drawing-antialiased-lines/
@@ -102,6 +109,9 @@ void LineRenderer::initialize()
 		unitNormal << QVector2D(nx, ny);
 		unitNormal << QVector2D(-nx, -ny);
 		unitNormal << QVector2D(nx, ny);
+		vertexColours << QVector3D(1.0, 1.0, 1.0);
+		vertexColours << QVector3D(1.0, 1.0, 1.0);
+		vertexColours << QVector3D(1.0, 1.0, 1.0);
 		lineWidth.append(0.05f);
 		lineWidth.append(0.05f);
 		lineWidth.append(0.05f);
@@ -112,6 +122,9 @@ void LineRenderer::initialize()
 		unitNormal << QVector2D(nx, ny);
 		unitNormal << QVector2D(-nx, -ny);
 		unitNormal << QVector2D(-nx, -ny);
+		vertexColours << QVector3D(1.0, 0.0, 0.0);
+		vertexColours << QVector3D(0.0, 1.0, 0.0);
+		vertexColours << QVector3D(0.0, 0.0, 1.0);
 		lineWidth.append(0.05f);
 		lineWidth.append(0.05f);
 		lineWidth.append(0.05f);
@@ -131,16 +144,19 @@ void LineRenderer::render()
 	program1.setAttributeArray(vertexAttr1, vertices.constData());
 	program1.setAttributeArray(unitNormalAttr, unitNormal.constData());
 	program1.setAttributeArray(lineWidthAttr, lineWidth.constData(), 1);
+	program1.setAttributeArray(colourAttr, vertexColours.constData());
 
 	program1.enableAttributeArray(vertexAttr1);
 	program1.enableAttributeArray(unitNormalAttr);
 	program1.enableAttributeArray(lineWidthAttr);
+	program1.enableAttributeArray(colourAttr);
 
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 
 	program1.disableAttributeArray(vertexAttr1);
 	program1.disableAttributeArray(unitNormalAttr);
 	program1.disableAttributeArray(lineWidthAttr);
+	program1.enableAttributeArray(colourAttr);
 
 	program1.release();
 }

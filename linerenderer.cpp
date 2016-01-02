@@ -82,12 +82,15 @@ void CalcBisection(float x0, float y0, float x1, float y1, float x2, float y2,
 	float v01x = x1 - x0;
 	float v01y = y1 - y0;
 	Normalize(v01x, v01y);
+	//cout << v01x << "," << v01y << endl;
 	float v12x = x2 - x1;
 	float v12y = y2 - y1;
 	Normalize(v12x, v12y);
+	//cout << v12x << "," << v12y << endl;
 	float bisectx = v01x - v12x;
 	float bisecty = v01y - v12y;
 	Normalize(bisectx, bisecty);
+	//cout << "bisectx: " << bisectx << "," << bisecty << endl;
 
 	float n01x = v01y;
 	float n01y = -v01x;
@@ -95,6 +98,7 @@ void CalcBisection(float x0, float y0, float x1, float y1, float x2, float y2,
 	float n12y = -v12x;
 
 	float dotBisectWithLineNorm = bisectx * n12x + bisecty * n12y;
+
 	if(dotBisectWithLineNorm != 0.0f)
 	{
 		if(abs(dotBisectWithLineNorm) > 1.0f) {
@@ -103,10 +107,14 @@ void CalcBisection(float x0, float y0, float x1, float y1, float x2, float y2,
 			else
 				dotBisectWithLineNorm = -1.0f;
 		}
-		dotBisectWithLineNorm = abs(dotBisectWithLineNorm);
+		//dotBisectWithLineNorm = abs(dotBisectWithLineNorm);
+		float ang = acos(dotBisectWithLineNorm);
+		//cout << "dotBisectWithLineNorm: " << dotBisectWithLineNorm << " (" << (ang*180.0/M_PI) <<")"<<endl;
 
-		extrusionxOut = n12x / dotBisectWithLineNorm;
-		extrusionyOut = n12y / dotBisectWithLineNorm;
+		float extrusionMag = 1.0f / dotBisectWithLineNorm;
+		//cout << "extrusionMag: " << extrusionMag << endl;
+		extrusionxOut = bisectx * extrusionMag;
+		extrusionyOut = bisecty * extrusionMag;
 	}
 	else
 	{
@@ -121,6 +129,7 @@ void LineRenderer::addLineSegment(
 		float y0, float y1, float y2, float y3,
 		float w0, float w1, float w2, float w3)
 {
+	//Inspired by https://www.mapbox.com/blog/drawing-antialiased-lines/
 	float dx = x2 - x1;
 	float dy = y2 - y1;
 
@@ -130,8 +139,10 @@ void LineRenderer::addLineSegment(
 
 	float extrusion01x = 0.0f, extrusion01y = 0.0f;
 	CalcBisection(x0, y0, x1, y1, x2, y2, extrusion01x, extrusion01y);
+	cout << "extrusion01: " << extrusion01x << "," << extrusion01y << endl;
 	float extrusion12x = 0.0f, extrusion12y = 0.0f;
 	CalcBisection(x1, y1, x2, y2, x3, y3, extrusion12x, extrusion12y);
+	cout << "extrusion12: " << extrusion12x << "," << extrusion12y << endl;
 
 	vertices << QVector2D(x1, y1);
 	vertices << QVector2D(x1, y1);
@@ -195,12 +206,7 @@ void LineRenderer::initialize()
 	vertexColours.clear();
 	extrusion.clear();
 
-
-
-
-/*
 	for(unsigned i=0;i<100;i++) {
-		//https://www.mapbox.com/blog/drawing-antialiased-lines/
 
 		float x0 = ((float)(i-1) / 100.0f) * 2.0f - 1.0f;
 		float x1 = ((float)i / 100.0f) * 2.0f - 1.0f;
@@ -221,17 +227,17 @@ void LineRenderer::initialize()
 			x0, x1, x2, x3,
 			y0, y1, y2, y3,
 			w0, w1, w2, w3);
-	}*/
+	}
 
-	addLineSegment(
-		-1.0, -0.9, 0.4, 0.4,
+	/*addLineSegment(
+		-1.0, -0.9, 0.3, 0.4,
 		-0.9, -0.9, -0.9, 0.7,
 		0.08, 0.08, 0.08, 0.08);
 
 	addLineSegment(
-		-0.9, 0.4, 0.4, 0.4,
+		-0.9, 0.3, 0.4, 0.4,
 		-0.9, -0.9, 0.7, 0.9,
-		0.08, 0.08, 0.08, 0.08);
+		0.08, 0.08, 0.08, 0.08);*/
 
 }
 

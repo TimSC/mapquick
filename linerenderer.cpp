@@ -206,7 +206,7 @@ void LineRenderer::initialize()
 	vertexColours.clear();
 	extrusion.clear();
 
-	/*for(unsigned i=68;i<70;i++) {
+	for(unsigned i=0;i<100;i++) {
 
 		float x0 = ((float)(i-1) / 100.0f) * 2.0f - 1.0f;
 		float x1 = ((float)i / 100.0f) * 2.0f - 1.0f;
@@ -216,36 +216,17 @@ void LineRenderer::initialize()
 		float y1 = .2 * sin(20.0f * x1);
 		float y2 = .2 * sin(20.0f * x2);
 		float y3 = .2 * sin(20.0f * x3);
-		cout << x0 << "," << y0 << endl;
-		cout << x1 << "," << y1 << endl;
-		cout << x2 << "," << y2 << endl;
-		cout << x3 << "," << y3 << endl;
-		float w0 = 0.05;
-		float w1 = 0.05;
-		float w2 = 0.05;
-		float w3 = 0.05;
+		float w0 = 0.02;
+		float w1 = 0.02;
+		float w2 = 0.02;
+		float w3 = 0.02;
 
 		addLineSegment(
 			x0, x1, x2, x3,
 			y0, y1, y2, y3,
 			w0, w1, w2, w3);
-	}*/
+	}
 
-	float x0 = 0.34, y0 = 0.0988228;
-	float x1 = 0.36, y1 = 0.158734;
-	float x2 = 0.38, y2 = 0.193584;
-	float x3 = 0.4, y3 = 0.197872;
-	float x4 = 0.42, y4 = 0.17092;
-
-	addLineSegment(
-		x0, x1, x2, x3,
-		y0, y1, y2, y3,
-		0.08, 0.08, 0.08, 0.08);
-
-	addLineSegment(
-		x1, x2, x3, x4,
-		y1, y2, y3, y4,
-		0.08, 0.08, 0.08, 0.08);
 
 }
 

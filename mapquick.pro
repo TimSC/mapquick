@@ -11,9 +11,9 @@ SOURCES += fboinsgrenderer.cpp main.cpp \
 
 INCLUDEPATH += ../shared
 
-RESOURCES += textureinsgnode.qrc
+RESOURCES += mapquick.qrc
 
-target.path = $$[QT_INSTALL_EXAMPLES]/quick/scenegraph/textureinsgnode
+target.path = $$[QT_INSTALL_EXAMPLES]/quick/scenegraph/mapquick
 INSTALLS += target
 
 OTHER_FILES += \

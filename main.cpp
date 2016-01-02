@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 
     QQuickView view;
     view.setResizeMode(QQuickView::SizeRootObjectToView);
-    view.setSource(QUrl("qrc:///scenegraph/textureinsgnode/main.qml"));
+    view.setSource(QUrl("qrc:///scenegraph/mapquick/main.qml"));
     view.show();
 
     return app.exec();

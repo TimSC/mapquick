@@ -115,6 +115,60 @@ void CalcBisection(float x0, float y0, float x1, float y1, float x2, float y2,
 	}
 }
 
+
+void LineRenderer::addLineSegment(
+		float x0, float x1, float x2, float x3,
+		float y0, float y1, float y2, float y3,
+		float w0, float w1, float w2, float w3)
+{
+	float dx = x2 - x1;
+	float dy = y2 - y1;
+
+	float nx = dy;
+	float ny = -dx;
+	Normalize(nx, ny);
+
+	float extrusion01x = 0.0f, extrusion01y = 0.0f;
+	CalcBisection(x0, y0, x1, y1, x2, y2, extrusion01x, extrusion01y);
+	float extrusion12x = 0.0f, extrusion12y = 0.0f;
+	CalcBisection(x1, y1, x2, y2, x3, y3, extrusion12x, extrusion12y);
+
+	vertices << QVector2D(x1, y1);
+	vertices << QVector2D(x1, y1);
+	vertices << QVector2D(x2, y2);
+	unitNormal << QVector2D(nx, ny);
+	unitNormal << QVector2D(-nx, -ny);
+	unitNormal << QVector2D(nx, ny);
+
+	vertexColours << QVector3D(0.5, 0.5, 0.5);
+	vertexColours << QVector3D(0.5, 0.5, 0.5);
+	vertexColours << QVector3D(0.5, 0.5, 0.5);
+	lineWidth.append(w1);
+	lineWidth.append(w1);
+	lineWidth.append(w2);
+	extrusion << QVector2D(extrusion01x, extrusion01y);
+	extrusion << QVector2D(-extrusion01x, -extrusion01y);
+	extrusion << QVector2D(extrusion12x, extrusion12y);
+
+	vertices << QVector2D(x2, y2);
+	vertices << QVector2D(x2, y2);
+	vertices << QVector2D(x1, y1);
+	unitNormal << QVector2D(nx, ny);
+	unitNormal << QVector2D(-nx, -ny);
+	unitNormal << QVector2D(-nx, -ny);
+
+	vertexColours << QVector3D(0.5, 0.5, 0.5);
+	vertexColours << QVector3D(0.5, 0.5, 0.5);
+	vertexColours << QVector3D(0.5, 0.5, 0.5);
+	lineWidth.append(w2);
+	lineWidth.append(w2);
+	lineWidth.append(w1);
+	extrusion << QVector2D(extrusion12x, extrusion12y);
+	extrusion << QVector2D(-extrusion12x, -extrusion12y);
+	extrusion << QVector2D(-extrusion01x, -extrusion01y);
+
+}
+
 void LineRenderer::initialize()
 {
 	cout << glGetString(GL_VERSION) << endl;
@@ -141,6 +195,10 @@ void LineRenderer::initialize()
 	vertexColours.clear();
 	extrusion.clear();
 
+
+
+
+/*
 	for(unsigned i=0;i<100;i++) {
 		//https://www.mapbox.com/blog/drawing-antialiased-lines/
 
@@ -158,53 +216,23 @@ void LineRenderer::initialize()
 		float w1 = 0.05;
 		float w2 = 0.05;
 		float w3 = 0.05;
-		float nx = dy;
-		float ny = -dx;
-		Normalize(nx, ny);
 
-		float extrusion01x = 0.0f, extrusion01y = 0.0f;
-		CalcBisection(x0, y0, x1, y1, x2, y2, extrusion01x, extrusion01y);
-		float extrusion12x = 0.0f, extrusion12y = 0.0f;
-		CalcBisection(x1, y1, x2, y2, x3, y3, extrusion12x, extrusion12y);
+		addLineSegment(
+			x0, x1, x2, x3,
+			y0, y1, y2, y3,
+			w0, w1, w2, w3);
+	}*/
 
-		vertices << QVector2D(x1, y1);
-		vertices << QVector2D(x1, y1);
-		vertices << QVector2D(x2, y2);
-		unitNormal << QVector2D(nx, ny);
-		unitNormal << QVector2D(-nx, -ny);
-		unitNormal << QVector2D(nx, ny);
-		/*vertexColours << QVector3D(1.0, 0.0, 0.0);
-		vertexColours << QVector3D(0.0, 1.0, 0.0);
-		vertexColours << QVector3D(0.0, 0.0, 1.0);*/
-		vertexColours << QVector3D(0.5, 0.5, 0.5);
-		vertexColours << QVector3D(0.5, 0.5, 0.5);
-		vertexColours << QVector3D(0.5, 0.5, 0.5);
-		lineWidth.append(w1);
-		lineWidth.append(w1);
-		lineWidth.append(w2);
-		extrusion << QVector2D(extrusion01x, extrusion01y);
-		extrusion << QVector2D(-extrusion01x, -extrusion01y);
-		extrusion << QVector2D(extrusion12x, extrusion12y);
+	addLineSegment(
+		-1.0, -0.9, 0.4, 0.4,
+		-0.9, -0.9, -0.9, 0.7,
+		0.08, 0.08, 0.08, 0.08);
 
-		vertices << QVector2D(x2, y2);
-		vertices << QVector2D(x2, y2);
-		vertices << QVector2D(x1, y1);
-		unitNormal << QVector2D(nx, ny);
-		unitNormal << QVector2D(-nx, -ny);
-		unitNormal << QVector2D(-nx, -ny);
-		/*vertexColours << QVector3D(1.0, 0.0, 0.0);
-		vertexColours << QVector3D(0.0, 1.0, 0.0);
-		vertexColours << QVector3D(0.0, 0.0, 1.0);*/
-		vertexColours << QVector3D(0.5, 0.5, 0.5);
-		vertexColours << QVector3D(0.5, 0.5, 0.5);
-		vertexColours << QVector3D(0.5, 0.5, 0.5);
-		lineWidth.append(w2);
-		lineWidth.append(w2);
-		lineWidth.append(w1);
-		extrusion << QVector2D(extrusion12x, extrusion12y);
-		extrusion << QVector2D(-extrusion12x, -extrusion12y);
-		extrusion << QVector2D(-extrusion01x, -extrusion01y);
-	}
+	addLineSegment(
+		-0.9, 0.4, 0.4, 0.4,
+		-0.9, -0.9, 0.7, 0.9,
+		0.08, 0.08, 0.08, 0.08);
+
 }
 
 void LineRenderer::render()

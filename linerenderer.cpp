@@ -106,16 +106,8 @@ void CalcBisection(float x0, float y0, float x1, float y1, float x2, float y2,
 
 	if(dotBisectWithLineNorm != 0.0f)
 	{
-		if(abs(dotBisectWithLineNorm) > 1.0f) {
-			if(dotBisectWithLineNorm > 0.0f)
-				dotBisectWithLineNorm = 1.0f;
-			else
-				dotBisectWithLineNorm = -1.0f;
-		}
-
-		float extrusionMag = 1.0f / dotBisectWithLineNorm;
-		extrusionxOut = bisectx * extrusionMag;
-		extrusionyOut = bisecty * extrusionMag;
+		extrusionxOut = bisectx / dotBisectWithLineNorm;
+		extrusionyOut = bisecty / dotBisectWithLineNorm;
 	}
 	else
 	{

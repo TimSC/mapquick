@@ -1,6 +1,7 @@
 #include "polygonrenderer.h"
 #include <iostream>
 #include <cmath>
+#include <GL/gl.h>
 using namespace std;
 
 // Vertex shader
@@ -12,9 +13,6 @@ const char vs[] = \
 "// Main function, which needs to set `gl_Position`.\n" \
 "void main()\n" \
 "{\n" \
-"    // The final position is transformed from a null signal to a sinewave here.\n" \
-"    // We pass the position to gl_Position, by converting it into\n" \
-"    // a 4D vector. The last coordinate should be 0 when rendering 2D figures.\n" \
 "    gl_Position = vec4(vertex.x, vertex.y, 0., 1.);\n" \
 "}\n";
 
@@ -41,7 +39,6 @@ PolygonRenderer::~PolygonRenderer()
 
 void PolygonRenderer::initialize()
 {
-	cout << glGetString(GL_VERSION) << endl;
 
 	QOpenGLShader *vshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &program1);
 	vshader1->compileSourceCode(vs);
@@ -54,28 +51,38 @@ void PolygonRenderer::initialize()
 	program1.link();
 
 	vertexAttr1 = program1.attributeLocation("vertex");
-	cout << "vertex attribute location: " << vertexAttr1 << endl;
 
 	vertices.clear();
-	for(unsigned i=0;i<10000;i++) {
-		float x = ((float)i / 10000.0f) * 2.0f - 1.0;
-		vertices << QVector2D(x, .2 * sin(20.0f * x));
+	vertices << QVector2D(-0.2, -0.2);
+	vertices << QVector2D(0.0, 0.0);
+	vertices << QVector2D(0.2, -0.2);
+	vertices << QVector2D(0.2, 0.2);
+	vertices << QVector2D(-0.2, 0.2);
+
+	/*GLUtesselatorObj *tess = gluNewTess();
+	gluTessBeginPolygon(tess, this);
+	gluTessBeginContour(tess);
+
+	GLdouble cords[3];
+	cords[2] = 0.0;
+	for(size_t i=0;vertices.size();i++) {
+		cords[0] = vertices[i][0];
+		cords[1] = vertices[i][1];
+		gluTessVertex(tess, cords, NULL);
 	}
+	gluTessEndContour(tess);
+	gluTessEndPolygon(tess);
+	gluDeleteTess(tess);*/
 
 }
 
 void PolygonRenderer::render()
 {
-	glDepthMask(false);
-
-	glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	program1.bind();
 	program1.enableAttributeArray(vertexAttr1);
 	program1.setAttributeArray(vertexAttr1, vertices.constData());
 
-	glDrawArrays(GL_LINE_STRIP, 0, vertices.size());
+	glDrawArrays(GL_POLYGON, 0, vertices.size());
 
 	program1.disableAttributeArray(vertexAttr1);
 	program1.release();

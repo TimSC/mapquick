@@ -173,7 +173,6 @@ void LineRenderer::AddLineSegment(
 
 void LineRenderer::initialize()
 {
-	cout << glGetString(GL_VERSION) << endl;
 
 	QOpenGLShader *vshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &program1);
 	vshader1->compileSourceCode(vs);
@@ -230,12 +229,6 @@ void LineRenderer::initialize()
 
 void LineRenderer::render()
 {
-	glDisable(GL_DEPTH_TEST);
-	glBlendEquation(GL_FUNC_ADD);
-	glEnable(GL_BLEND);
-
-	glClearColor(0.5f, 0.5f, 0.7f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	program1.bind();
 	program1.setAttributeArray(vertexAttr1, vertices.constData());

@@ -47,17 +47,29 @@
 
 #include <QtQuick/QQuickWindow>
 #include <qsgsimpletexturenode.h>
+#include <iostream>
+using namespace std;
 
 class FboRenderer : public QQuickFramebufferObject::Renderer
 {
 public:
 	FboRenderer()
     {
-		renderer.initialize();
+		cout << glGetString(GL_VERSION) << endl;
+		lineRenderer.initialize();
+		polyRenderer.initialize();
     }
 
     void render() {
-		renderer.render();
+		glDisable(GL_DEPTH_TEST);
+		glBlendEquation(GL_FUNC_ADD);
+		glEnable(GL_BLEND);
+
+		glClearColor(0.5f, 0.5f, 0.7f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		lineRenderer.render();
+		polyRenderer.render();
         update();
     }
 
@@ -69,8 +81,8 @@ public:
     }
 
 	//LogoRenderer renderer;
-	//PolygonRenderer renderer;
-	LineRenderer renderer;
+	PolygonRenderer polyRenderer;
+	LineRenderer lineRenderer;
 };
 
 QQuickFramebufferObject::Renderer *FboInSGRenderer::createRenderer() const

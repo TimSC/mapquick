@@ -5,6 +5,14 @@
 #include <QtGui/qmatrix4x4.h>
 #include <QtGui/qopenglshaderprogram.h>
 
+class RgbaColour
+{
+public:
+	float r, g, b, a;
+
+	RgbaColour();
+};
+
 class LineRenderer
 {
 public:
@@ -27,10 +35,10 @@ protected:
 	int colourAttr;
 	int extrusionAttr;
 
-	void addLineSegment(
-			float x0, float x1, float x2, float x3,
-			float y0, float y1, float y2, float y3,
-			float w0, float w1, float w2, float w3);
+	void AddLineSegment(float x0, float x1, float x2, float x3,
+						float y0, float y1, float y2, float y3,
+						float w1, float w2,
+						class RgbaColour &c1, class RgbaColour &c2);
 };
 
 #endif // LINERENDERER_H

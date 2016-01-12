@@ -5,6 +5,22 @@
 #include <QtGui/qmatrix4x4.h>
 #include <QtGui/qopenglshaderprogram.h>
 
+class TessResult
+{
+protected:
+
+public:
+	TessResult();
+	virtual ~TessResult();
+
+	static void BeginCB(GLenum type, void *data);
+	static void EndCB(void *data);
+	static void VertexCB( void *vertex_data, void *data);
+	static void CombineCB( GLdouble coords[3], void *vertex_data[4],
+		GLfloat weight[4], void **outData, void *data);
+	static void ErrorCB( GLenum errno, void *data);
+};
+
 class PolygonRenderer
 {
 public:
@@ -18,6 +34,8 @@ protected:
 	QOpenGLShaderProgram program1;
 	QVector<QVector2D> vertices;
 	int vertexAttr1;
+	int offsetUnif;
+	int blurAlphaUnif;
 };
 
 #endif // POLYGONRENDERER_H

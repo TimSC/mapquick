@@ -35,6 +35,7 @@ protected:
 	QOpenGLShaderProgram program1;
 	QVector<QVector2D> vertices;
 	QOpenGLBuffer m_indexBuffer;
+	QOpenGLBuffer m_vertexBuffer;
 	int vertexAttr1;
 	int offsetUnif;
 	int blurAlphaUnif;

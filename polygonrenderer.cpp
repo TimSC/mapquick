@@ -84,7 +84,8 @@ const char fs[] =
 // ***********************************************************************
 
 PolygonRenderer::PolygonRenderer():
-	m_indexBuffer(QOpenGLBuffer::IndexBuffer)
+	m_indexBuffer(QOpenGLBuffer::IndexBuffer),
+	m_vertexBuffer(QOpenGLBuffer::VertexBuffer)
 {
 	vertexAttr1 = -1;
 	offsetUnif = -1;
@@ -119,6 +120,11 @@ void PolygonRenderer::initialize()
 	vertices << QVector2D(0.2, 0.2);
 	vertices << QVector2D(-0.2, 0.2);
 
+	m_vertexBuffer.create();
+	m_vertexBuffer.setUsagePattern( QOpenGLBuffer::StaticDraw );
+	m_vertexBuffer.bind();
+	m_vertexBuffer.allocate( vertices.constData(), vertices.size() * sizeof(QVector2D) );
+
 	GLUtesselatorObj *tess = gluNewTess();
 	class TessResult tessResult;
 	gluTessCallback(tess, GLU_TESS_BEGIN_DATA,   (_GLUfuncptr)tessResult.BeginCB);
@@ -152,12 +158,13 @@ void PolygonRenderer::initialize()
 
 void PolygonRenderer::render()
 {
-
 	program1.bind();
-	program1.setAttributeArray(vertexAttr1, vertices.constData());
-	program1.enableAttributeArray(vertexAttr1);
 
 	m_indexBuffer.bind();
+
+	m_vertexBuffer.bind();
+	program1.setAttributeBuffer(vertexAttr1, GL_FLOAT, 0, 2, 0);
+	program1.enableAttributeArray(vertexAttr1);
 
 	//Sharp version
 	QVector2D offset(0.0, 0.0);

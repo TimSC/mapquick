@@ -148,7 +148,6 @@ void PolygonRenderer::initialize()
 	m_indexBuffer.setUsagePattern( QOpenGLBuffer::StaticDraw );
 	m_indexBuffer.bind();
 	m_indexBuffer.allocate( indices.constData(), indices.size() * sizeof( unsigned int ) );
-
 }
 
 void PolygonRenderer::render()
@@ -164,7 +163,7 @@ void PolygonRenderer::render()
 	QVector2D offset(0.0, 0.0);
 	program1.setUniformValueArray(offsetUnif, &offset, 1);
 	program1.setUniformValue(blurAlphaUnif, 1.0f);
-	glDrawArrays(GL_POLYGON, 0, vertices.size());
+	glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, 0);
 
 	double blurSize = 0.01;
 
@@ -172,23 +171,22 @@ void PolygonRenderer::render()
 	offset = QVector2D(blurSize, 0.0);
 	program1.setUniformValueArray(offsetUnif, &offset, 1);
 	program1.setUniformValue(blurAlphaUnif, 0.5f);
-
-	glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_SHORT, 0);
+	glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, 0);
 
 	offset = QVector2D(-blurSize, 0.0);
 	program1.setUniformValueArray(offsetUnif, &offset, 1);
 	program1.setUniformValue(blurAlphaUnif, 0.5f);
-	glDrawArrays(GL_POLYGON, 0, vertices.size());
+	glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, 0);
 
 	offset = QVector2D(0.0, blurSize);
 	program1.setUniformValueArray(offsetUnif, &offset, 1);
 	program1.setUniformValue(blurAlphaUnif, 0.5f);
-	glDrawArrays(GL_POLYGON, 0, vertices.size());
+	glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, 0);
 
 	offset = QVector2D(0.0, -blurSize);
 	program1.setUniformValueArray(offsetUnif, &offset, 1);
 	program1.setUniformValue(blurAlphaUnif, 0.5f);
-	glDrawArrays(GL_POLYGON, 0, vertices.size());
+	glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, 0);
 
 	program1.disableAttributeArray(vertexAttr1);
 	program1.release();

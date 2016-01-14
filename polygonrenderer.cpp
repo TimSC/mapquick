@@ -40,6 +40,11 @@ void TessResult::VertexCB( void *vertex_data, void *data)
 	cout << vertexIndex << endl;
 	self->rxIndices.append(vertexIndex);
 
+	if (self->currentType == GL_TRIANGLES) {
+		self->triIndices.append(vertexIndex);
+	}
+
+	//Convert to simple triangles
 	if (self->currentType == GL_TRIANGLE_FAN) {
 		if(self->rxIndices.size() == 3) {
 			self->triIndices.append(self->rxIndices[0]);
@@ -48,6 +53,19 @@ void TessResult::VertexCB( void *vertex_data, void *data)
 		}
 		else if(self->rxIndices.size() > 3) {
 			self->triIndices.append(self->rxIndices[0]);
+			self->triIndices.append(self->rxIndices[self->rxIndices.size()-2]);
+			self->triIndices.append(self->rxIndices[self->rxIndices.size()-1]);
+		}
+	}
+
+	if (self->currentType == GL_TRIANGLE_STRIP) {
+		if(self->rxIndices.size() == 3) {
+			self->triIndices.append(self->rxIndices[0]);
+			self->triIndices.append(self->rxIndices[1]);
+			self->triIndices.append(self->rxIndices[2]);
+		}
+		else if(self->rxIndices.size() > 3) {
+			self->triIndices.append(self->rxIndices[self->rxIndices.size()-3]);
 			self->triIndices.append(self->rxIndices[self->rxIndices.size()-2]);
 			self->triIndices.append(self->rxIndices[self->rxIndices.size()-1]);
 		}

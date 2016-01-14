@@ -7,7 +7,7 @@ using namespace std;
 
 TessResult::TessResult()
 {
-
+	currentType = GL_INVALID_ENUM;
 }
 
 TessResult::~TessResult()
@@ -23,18 +23,35 @@ void TessResult::BeginCB(GLenum type, void *data)
 	if (type == GL_TRIANGLE_STRIP) cout << "GL_TRIANGLE_STRIP";
 	if (type == GL_TRIANGLE_FAN) cout << "GL_TRIANGLE_FAN";
 	cout << endl;
+	self->currentType = type;
 }
 
 void TessResult::EndCB(void *data)
 {
 	class TessResult *self = (class TessResult *)data;
-
+	self->currentType = GL_INVALID_ENUM;
+	self->rxIndices.clear();
 }
 
 void TessResult::VertexCB( void *vertex_data, void *data)
 {
 	class TessResult *self = (class TessResult *)data;
-	cout << (long int)vertex_data << endl;
+	size_t vertexIndex = (size_t)vertex_data;
+	cout << vertexIndex << endl;
+	self->rxIndices.append(vertexIndex);
+
+	if (self->currentType == GL_TRIANGLE_FAN) {
+		if(self->rxIndices.size() == 3) {
+			self->triIndices.append(self->rxIndices[0]);
+			self->triIndices.append(self->rxIndices[1]);
+			self->triIndices.append(self->rxIndices[2]);
+		}
+		else if(self->rxIndices.size() > 3) {
+			self->triIndices.append(self->rxIndices[0]);
+			self->triIndices.append(self->rxIndices[self->rxIndices.size()-2]);
+			self->triIndices.append(self->rxIndices[self->rxIndices.size()-1]);
+		}
+	}
 }
 
 void TessResult::CombineCB( GLdouble coords[3], void *vertex_data[4],
@@ -148,12 +165,10 @@ void PolygonRenderer::initialize()
 	gluDeleteTess(tess);
 
 	QVector<unsigned int> indices;
-	for(unsigned i=0;i<vertices.size();i++)
-		indices << i;
 	m_indexBuffer.create();
 	m_indexBuffer.setUsagePattern( QOpenGLBuffer::StaticDraw );
 	m_indexBuffer.bind();
-	m_indexBuffer.allocate( indices.constData(), indices.size() * sizeof( unsigned int ) );
+	m_indexBuffer.allocate( tessResult.triIndices.constData(), tessResult.triIndices.size() * sizeof( unsigned int ) );
 }
 
 void PolygonRenderer::render()
@@ -170,7 +185,7 @@ void PolygonRenderer::render()
 	QVector2D offset(0.0, 0.0);
 	program1.setUniformValueArray(offsetUnif, &offset, 1);
 	program1.setUniformValue(blurAlphaUnif, 1.0f);
-	glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
 
 	double blurSize = 0.01;
 
@@ -178,22 +193,22 @@ void PolygonRenderer::render()
 	offset = QVector2D(blurSize, 0.0);
 	program1.setUniformValueArray(offsetUnif, &offset, 1);
 	program1.setUniformValue(blurAlphaUnif, 0.5f);
-	glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
 
 	offset = QVector2D(-blurSize, 0.0);
 	program1.setUniformValueArray(offsetUnif, &offset, 1);
 	program1.setUniformValue(blurAlphaUnif, 0.5f);
-	glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
 
 	offset = QVector2D(0.0, blurSize);
 	program1.setUniformValueArray(offsetUnif, &offset, 1);
 	program1.setUniformValue(blurAlphaUnif, 0.5f);
-	glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
 
 	offset = QVector2D(0.0, -blurSize);
 	program1.setUniformValueArray(offsetUnif, &offset, 1);
 	program1.setUniformValue(blurAlphaUnif, 0.5f);
-	glDrawElements(GL_POLYGON, vertices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
 
 	program1.disableAttributeArray(vertexAttr1);
 	program1.release();

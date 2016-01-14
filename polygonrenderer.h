@@ -9,7 +9,8 @@
 class TessResult
 {
 protected:
-
+	QVector<size_t> rxIndices;
+	GLenum currentType;
 public:
 	TessResult();
 	virtual ~TessResult();
@@ -20,6 +21,8 @@ public:
 	static void CombineCB( GLdouble coords[3], void *vertex_data[4],
 		GLfloat weight[4], void **outData, void *data);
 	static void ErrorCB( GLenum errno, void *data);
+
+	QVector<unsigned int> triIndices;
 };
 
 class PolygonRenderer

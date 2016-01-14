@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cmath>
 #include "glues/source/glu.h"
-#include <qopenglbuffer.h>
 
 using namespace std;
 
@@ -84,7 +83,8 @@ const char fs[] =
 
 // ***********************************************************************
 
-PolygonRenderer::PolygonRenderer()
+PolygonRenderer::PolygonRenderer():
+	m_indexBuffer(QOpenGLBuffer::IndexBuffer)
 {
 	vertexAttr1 = -1;
 	offsetUnif = -1;
@@ -141,24 +141,24 @@ void PolygonRenderer::initialize()
 	gluTessEndPolygon(tess);
 	gluDeleteTess(tess);
 
-
-
-}
-
-void PolygonRenderer::render()
-{
 	QVector<unsigned int> indices;
 	for(unsigned i=0;i<vertices.size();i++)
 		indices << i;
-	QOpenGLBuffer m_indexBuffer(QOpenGLBuffer::IndexBuffer);
 	m_indexBuffer.create();
 	m_indexBuffer.setUsagePattern( QOpenGLBuffer::StaticDraw );
 	m_indexBuffer.bind();
 	m_indexBuffer.allocate( indices.constData(), indices.size() * sizeof( unsigned int ) );
 
+}
+
+void PolygonRenderer::render()
+{
+
 	program1.bind();
 	program1.setAttributeArray(vertexAttr1, vertices.constData());
 	program1.enableAttributeArray(vertexAttr1);
+
+	m_indexBuffer.bind();
 
 	//Sharp version
 	QVector2D offset(0.0, 0.0);

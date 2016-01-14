@@ -4,6 +4,7 @@
 #include <QtGui/qvector3d.h>
 #include <QtGui/qmatrix4x4.h>
 #include <QtGui/qopenglshaderprogram.h>
+#include <qopenglbuffer.h>
 
 class TessResult
 {
@@ -33,6 +34,7 @@ public:
 protected:
 	QOpenGLShaderProgram program1;
 	QVector<QVector2D> vertices;
+	QOpenGLBuffer m_indexBuffer;
 	int vertexAttr1;
 	int offsetUnif;
 	int blurAlphaUnif;
